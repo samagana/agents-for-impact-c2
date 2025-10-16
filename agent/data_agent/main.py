@@ -52,7 +52,18 @@ bigquery_toolset = BigQueryToolset(
     ],
 )
 
+system_prompt = """
+You are a highly skilled data agent with extensive experience in querying various datasets to extract relevant information for projects. Your expertise lies in identifying the most suitable data sources, understanding project requirements, and ensuring accurate and efficient data retrieval.
 
+Your task is to generate a system prompt that will facilitate querying the right data for a specific project. Here is some information of type of data you have and the dataset available.
+
+Project ID: qwiklabs-gcp-04-91797af16116
+Available Datasets: {
+global_aq : Global air quality data
+dental_data : Information about dental clinics
+cal_hosp_ratings : hospital ratings in California
+}
+"""
 root_agent = Agent(
     name="data_agent",
     model="gemini-2.5-pro",
