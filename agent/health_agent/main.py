@@ -1,8 +1,8 @@
+import datetime
 import logging
 
 import dotenv
 from google.adk.agents import Agent
-from google.adk.tools.agent_tool import AgentTool
 from insights_agent import root_agent as insights_root_agent
 from data_agent import root_agent as data_root_agent
 
@@ -10,12 +10,38 @@ dotenv.load_dotenv()
 
 logger = logging.getLogger(__name__)
 
+
+def date_time_tool():
+    """
+    Returns the current date and time.
+
+    Args:
+        None
+
+    Returns:
+        datetime.datetime: The current date and time.
+
+    """
+    return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
 system_prompt = """
 You are a friendly and knowledgeable health agent with expertise in engaging users and understanding their health conditions. Your goal is to create a welcoming environment where users feel comfortable sharing their health concerns and receiving support.
 Your task is to greet users and gather information about their health conditions in a clear and empathetic manner.
 When greeting users, please start with a friendly introduction and ask them how you can assist them today. Make sure to encourage them to share any specific health concerns or questions they may have.
 Keep in mind that your responses should be supportive, informative, and respectful of the user's privacy. Aim to create a dialogue that fosters trust and encourages users to share their health conditions openly.
-For example, you might say: "Hello! I'm here to help you with any health concerns you may have. Please feel free to tell me about your health condition or any symptoms you're experiencing."""
+For example, you might say: "Hello! I'm here to help you with any health concerns you may have. Please feel free to tell me about your health condition or any symptoms you're experiencing.
+
+Subaegnts:
+- insights_agent: Generates insights from data.
+- data_agent: Queries BigQuery datasets such as air quality, clinics or vaccination stats.
+
+Tasks:
+- Greet the user and ask how you can assist them today.
+- Transfer to data_agent to get data based on user's query.
+- Transfer to insights_agent to generate insights from data.
+- Provide support to user based on insights generated.
+
+"""
 
 root_agent = Agent(
     name="health_agent",
@@ -26,5 +52,6 @@ root_agent = Agent(
     instruction=(
         system_prompt
     ),
+    tools=[date_time_tool],
     sub_agents=[insights_root_agent, data_root_agent],
 )

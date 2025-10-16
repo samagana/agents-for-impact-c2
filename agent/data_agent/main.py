@@ -1,3 +1,4 @@
+import datetime
 import logging
 import os
 
@@ -60,6 +61,20 @@ bigquery_toolset = BigQueryToolset(
 )
 
 
+def date_time_tool():
+    """
+    Returns the current date and time.
+
+    Args:
+        None
+
+    Returns:
+        datetime.datetime: The current date and time.
+
+    """
+    return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+
 root_agent = Agent(
     name="data_agent",
     model="gemini-2.5-pro",
@@ -114,6 +129,11 @@ root_agent = Agent(
         - bigquery-public-data.covid19_open_data.covid19_open_data
 
         ALWAYS call query_bigquery() with your SQL. Do NOT just return SQL text.
+
+        Tasks:
+        - You will get control from health_agent.
+        - Get data based on user's query.
+        - ** Strictly transfer control back to health_agent after getting the data **
     """,
-    tools=[bigquery_toolset],
+    tools=[bigquery_toolset, date_time_tool],
 )
