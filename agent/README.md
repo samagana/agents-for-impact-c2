@@ -42,10 +42,9 @@ gcloud auth login
 # Configure Docker to use gcloud credentials for Artifact Registry
 gcloud auth configure-docker us-docker.pkg.dev
 
-# Tag the image for Artifact Registry
-docker tag c2-healthcare-agent:latest us-docker.pkg.dev/qwiklabs-gcp-04-91797af16116/c2-healthcare-agent/c2-healthcare-agent:latest
-
-# Push the image
+# Build, tag, and push in one command
+docker buildx build --platform linux/amd64 -t c2-healthcare-agent:latest . && \
+docker tag c2-healthcare-agent:latest us-docker.pkg.dev/qwiklabs-gcp-04-91797af16116/c2-healthcare-agent/c2-healthcare-agent:latest && \
 docker push us-docker.pkg.dev/qwiklabs-gcp-04-91797af16116/c2-healthcare-agent/c2-healthcare-agent:latest
 ```
 
@@ -60,16 +59,18 @@ gcloud run deploy c2-healthcare-agent \
     --region us-central1 \
     --allow-unauthenticated \
     --timeout=300 \
-    --memory=2Gi \
+    --memory=2048Mi \
     --cpu=2 \
+    --cpu-boost \
     --set-env-vars GOOGLE_API_KEY=your-api-key,GOOGLE_CLOUD_PROJECT=qwiklabs-gcp-04-91797af16116,GOOGLE_CLOUD_LOCATION=us-central1
 ```
 
 Replace `your-api-key` with your actual Google API key.
 
 **Note:** The deployment requires:
-- **Memory:** 2Gi (to handle BigQuery and AI model operations)
+- **Memory:** 2048Mi (to handle BigQuery and AI model operations, avoid 512Mi default limit)
 - **CPU:** 2 cores (for better performance)
+- **CPU Boost:** Enabled (to speed up container startup)
 - **Timeout:** 300 seconds (to allow for model initialization)
 
 **Note:** The .env file is NOT included in the Docker image. Supply secrets via `--env-file`, Docker secrets, or environment variables as appropriate for your deployment.
