@@ -23,8 +23,8 @@ WORKDIR /agent
 # Install uv
 RUN pip install uv
 
-# Copy installed dependencies from builder
-COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
+# Copy installed dependencies and virtual environment from builder
+COPY --from=builder /agent/.venv /agent/.venv
 COPY --from=builder /usr/local/bin/uv /usr/local/bin/uv
 
 # Copy application code
@@ -33,11 +33,12 @@ COPY . .
 
 EXPOSE 8080
 ENV ADK_HOST=0.0.0.0
-ENV ADK_PORT=8080
+ENV PORT=8080
 
 # Environment variables (set these at runtime for security)
 # GOOGLE_API_KEY - Required: Your Google API key
 # GOOGLE_CLOUD_PROJECT - Required: Your GCP project ID
 # GOOGLE_CLOUD_LOCATION - Required: GCP region (e.g., us-central1)
 
-ENTRYPOINT ["uv", "run", "adk", "web", "--host", "0.0.0.0", "--port", "8080"]
+# Use shell form to allow environment variable substitution
+ENTRYPOINT sh -c "uv run adk web --host 0.0.0.0 --port ${PORT:-8080}"
