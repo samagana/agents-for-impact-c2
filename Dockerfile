@@ -11,14 +11,14 @@ WORKDIR /agent
 RUN pip install uv
 
 # Copy dependency files and source code
-COPY pyproject.toml uv.lock ./
-COPY data_agent ./data_agent
-COPY health_agent ./health_agent
-COPY insights_agent ./insights_agent
-COPY search_agent ./search_agent
-COPY maps_agent ./maps_agent
-COPY api_server ./api_server
-COPY README.md ./
+COPY agent/pyproject.toml agent/uv.lock ./
+COPY agent/data_agent ./data_agent
+COPY agent/health_agent ./health_agent
+COPY agent/insights_agent ./insights_agent
+COPY agent/search_agent ./search_agent
+COPY agent/maps_agent ./maps_agent
+COPY agent/api_server ./api_server
+COPY agent/README.md ./
 RUN uv sync --frozen --no-dev
 
 # --- Stage 2: Build Next.js Frontend ---
@@ -26,14 +26,15 @@ FROM node:20-slim AS node-builder
 
 WORKDIR /ui
 
-# Copy package files
-COPY ../health-agent/package.json ../health-agent/package-lock.json* ./
+# Copy package files and scripts
+COPY health-agent/package.json ./
+COPY health-agent/scripts ./scripts
 
-# Install dependencies
-RUN npm ci
+# Install ALL dependencies including devDependencies (needed for build)
+RUN npm install --ignore-scripts
 
 # Copy frontend source
-COPY ../health-agent/ ./
+COPY health-agent/ ./
 
 # Build Next.js app
 ENV NEXT_TELEMETRY_DISABLED=1
@@ -69,7 +70,7 @@ COPY --from=node-builder /ui/next.config.ts /app/ui/next.config.ts
 COPY --from=node-builder /ui/public /app/ui/public
 
 # Copy startup script
-COPY start.sh /app/start.sh
+COPY agent/start.sh /app/start.sh
 RUN chmod +x /app/start.sh
 
 # DO NOT copy .env; mount at runtime
