@@ -14,9 +14,9 @@ const serviceAdapter = new ExperimentalEmptyAdapter();
 //    to setup the connection with the ADK agent.
 const runtime = new CopilotRuntime({
   agents: {
-    // Our FastAPI endpoint URL
-    "health_agent": new HttpAgent({url: "http://localhost:8000/"}),
-  }   
+    // Our FastAPI endpoint URL - use API_PORT env var or default to 8081
+    "health_agent": new HttpAgent({url: `http://localhost:${process.env.API_PORT || "8081"}/`}),
+  }
 });
  
 // 3. Build a Next.js API route that handles the CopilotKit runtime requests.

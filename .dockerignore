@@ -21,11 +21,15 @@ venv/
 .venv/
 ENV/
 env/
+agent/.venv/
 
 # Environment files
 .env
 .env.*
-local_settings.py
+agent/.env
+agent/.env.*
+health-agent/.env.local
+health-agent/.env.*.local
 
 # Database
 db.sqlite3*
@@ -57,7 +61,6 @@ celerybeat.pid
 # Documentation
 docs/
 docs/_build/
-README.md
 
 # Tests
 tests/
@@ -76,10 +79,16 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 
-# Node (for health-agent)
-../health-agent/node_modules/
-../health-agent/.next/
-../health-agent/.turbo/
-../health-agent/out/
-../health-agent/.env.local
-../health-agent/.env.*.local
+# Node
+health-agent/node_modules/
+health-agent/.next/
+health-agent/.turbo/
+health-agent/out/
+node_modules/
+.next/
+.turbo/
+out/
+
+# Build artifacts
+*.tar.gz
+*.zip
