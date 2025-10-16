@@ -21,5 +21,5 @@ root_agent = Agent(
         "You are a helpful agent who can answer user questions about the time and weather in a city."
         " and query google docs."
     ),
-    tools=[AgentTool(insights_root_agent), AgentTool(data_root_agent)],
+    sub_agents=[insights_root_agent, data_root_agent],
 )
