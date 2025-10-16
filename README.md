@@ -8,3 +8,10 @@
 cd agent
 uv run adk web
 ```
+4. Install [Google Cloud CLI](https://cloud.google.com/sdk/docs/install-sdk)
+5. Authenticate to Google Cloud
+```
+gcloud auth login
+gcloud auth application-default login
+gcloud config set project qwiklabs-gcp-04-91797af16116
+```
