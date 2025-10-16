@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  health-intelligence-hub:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: health-intelligence-hub
+    ports:
+      - "8501:8501"  # Streamlit webapp
+      - "8080:8080"  # ADK health agents API
+    environment:
+      # Required environment variables
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - GOOGLE_CLOUD_PROJECT=${GOOGLE_CLOUD_PROJECT}
+      - GOOGLE_CLOUD_LOCATION=${GOOGLE_CLOUD_LOCATION}
+      
+      # Optional environment variables
+      - ADK_PORT=8080
+      - STREAMLIT_PORT=8501
+      - STREAMLIT_SERVER_ADDRESS=0.0.0.0
+      - STREAMLIT_SERVER_HEADLESS=true
+      - STREAMLIT_BROWSER_GATHER_USAGE_STATS=false
+    volumes:
+      # Mount .env file for local development
+      - ./.env:/agent/.env:ro
+      # Optional: Mount data directory for persistent data
+      - ./data:/agent/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - health-hub-network
+
+  # Optional: Add a reverse proxy for production
+  nginx:
+    image: nginx:alpine
+    container_name: health-hub-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro  # For SSL certificates
+    depends_on:
+      - health-intelligence-hub
+    restart: unless-stopped
+    networks:
+      - health-hub-network
+    profiles:
+      - production
+
+networks:
+  health-hub-network:
+    driver: bridge
+
+volumes:
+  health-data:
+    driver: local
