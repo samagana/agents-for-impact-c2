@@ -21,5 +21,7 @@ packages = [
     "api_server",
     "data_agent",
     "health_agent",
-    "insights_agent"
+    "insights_agent",
+    "search_agent",
+    "maps_agent",
 ]

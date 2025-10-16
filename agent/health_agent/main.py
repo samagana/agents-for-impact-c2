@@ -2,7 +2,7 @@ import datetime
 import logging
 
 import dotenv
-from google.adk.agents import Agent, AgentTool
+from google.adk.agents import Agent
 from insights_agent import root_agent as insights_root_agent
 from data_agent import root_agent as data_root_agent
 from search_agent import root_agent as search_root_agent
