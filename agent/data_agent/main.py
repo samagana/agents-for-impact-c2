@@ -54,7 +54,7 @@ logger = logging.getLogger(__name__)
 
 
 root_agent = Agent(
-    name="insights_agent",
+    name="data_agent",
     model="gemini-2.5-pro",
     description=(
         "Queries BigQuery datasets such as air quality, clinics or vaccination stats."

@@ -1,6 +1,6 @@
 [project]
 name = "agent"
-version = "0.1.0"
+version = "0.1.3"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -14,7 +14,7 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
 packages = [
-    "data-agent",
-    "health-agent",
-    "insights-agent"
+    "data_agent",
+    "health_agent",
+    "insights_agent"
 ]
