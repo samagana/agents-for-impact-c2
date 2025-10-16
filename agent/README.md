@@ -67,10 +67,14 @@ gcloud run deploy c2-healthcare-agent \
 
 Replace `your-api-key` with your actual Google API key.
 
+**Important:** When setting environment variables:
+- Do NOT use quotes around values in the `--set-env-vars` command
+- Example: `GOOGLE_API_KEY=AIzaSy...` ✅ (correct)
+- Example: `GOOGLE_API_KEY="AIzaSy..."` ❌ (incorrect - will cause "API key not valid" error)
+
 **Note:** The deployment requires:
 - **Memory:** 2048Mi (to handle BigQuery and AI model operations, avoid 512Mi default limit)
 - **CPU:** 2 cores (for better performance)
 - **CPU Boost:** Enabled (to speed up container startup)
 - **Timeout:** 300 seconds (to allow for model initialization)
-
 **Note:** The .env file is NOT included in the Docker image. Supply secrets via `--env-file`, Docker secrets, or environment variables as appropriate for your deployment.
