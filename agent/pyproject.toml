@@ -1,10 +1,11 @@
 [project]
 name = "agent"
-version = "0.1.6"
+version = "0.1.7"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "ag-ui-adk>=0.3.1",
     "google-adk>=1.16.0",
     "pandas>=2.3.3",
     "pandas-gbq>=0.29.2",
@@ -17,6 +18,7 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
 packages = [
+    "api_server",
     "data_agent",
     "health_agent",
     "insights_agent"
