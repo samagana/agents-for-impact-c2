@@ -37,6 +37,13 @@ elif CREDENTIALS_TYPE == AuthCredentialTypes.SERVICE_ACCOUNT:
 else:
     # Initialize the tools to use the application default credentials.
     application_default_credentials, _ = google.auth.default()
+    
+    # Refresh credentials if expired
+    if hasattr(application_default_credentials, 'expired') and application_default_credentials.expired:
+        import google.auth.transport.requests
+        request = google.auth.transport.requests.Request()
+        application_default_credentials.refresh(request)
+    
     credentials_config = BigQueryCredentialsConfig(
         credentials=application_default_credentials
     )
@@ -75,6 +82,49 @@ root_agent = Agent(
 
         Always run the bigquery tools in project-id: qwiklabs-gcp-04-91797af16116 unless
         explicitly told otherwise.
+
+        You MUST use the query_bigquery tool to execute SQL queries.
+
+        Available Datasets:
+        
+        🏥 HEALTHCARE FACILITIES (PROJECT DATASETS - USE THESE FIRST!):
+        - qwiklabs-gcp-04-91797af16116.dental.dental_data
+          * Dental clinics with addresses, phone, services
+          * Filters: accepts_uninsured, free_services, sliding_scale
+          * Has lat/long for proximity calculations
+          * Includes uninsured_rate and population by county
+        
+        - qwiklabs-gcp-04-91797af16116.cal_hosp_ratings.cal-hosp-ratings-2011-2018_copy
+          * California hospital ratings and performance
+          * Has Hospital, County, Performance_Rating, Latitude, Longitude
+          * Use for finding healthcare facilities
+        
+        📊 HEALTH DATA (PROJECT DATASETS):
+        - qwiklabs-gcp-04-91797af16116.chronic_disease_indicators.chronic_disease_indicators_table
+          * Disease prevalence by location (state/county)
+          * Topics: diabetes, cardiovascular, asthma, etc.
+          * Use for health outcome analysis
+        
+        - qwiklabs-gcp-04-91797af16116.global_aq.global_aq_data
+          * Real-time air quality with lat/long
+          * Pollutants by city/location with timestamps
+        
+        💰 DEMOGRAPHICS & SOCIOECONOMIC (PUBLIC):
+        - bigquery-public-data.census_bureau_acs.zip_codes_2018_5yr (income, poverty, employment)
+        - bigquery-public-data.census_bureau_acs.county_2018_5yr (county demographics)
+        - bigquery-public-data.broadstreet_adi.area_deprivation_index_by_zipcode (disadvantage index)
+        - bigquery-public-data.census_bureau_usa.population_by_zip_2010
+        
+        🌫️ ENVIRONMENTAL (PUBLIC):
+        - bigquery-public-data.epa_historical_air_quality.air_quality_annual_summary
+        - bigquery-public-data.epa_historical_air_quality.pm25_frm_daily_summary
+        - bigquery-public-data.epa_historical_air_quality.o3_daily_summary
+        
+        📈 HEALTH OUTCOMES (PUBLIC):
+        - bigquery-public-data.america_health_rankings.ahr (state health rankings)
+        - bigquery-public-data.covid19_open_data.covid19_open_data
+
+        ALWAYS call query_bigquery() with your SQL. Do NOT just return SQL text.
     """,
     tools=[bigquery_toolset],
 )
