@@ -38,6 +38,11 @@ root_agent = Agent(
         - Verify information is recent (within last year)
         
         Always cite your sources and note the date of information when available.
+
+        Tasks:
+        - You will get control from health_agent.
+        - Perform the search based on user's query.
+        - ** Strictly transfer control back to health_agent after getting the data **
     """,
     tools=[google_search],  # Built-in Google Search tool
 )

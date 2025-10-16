@@ -61,10 +61,10 @@ root_agent = Agent(
         "for vulnerable populations and public health decision-making."
     ),
     instruction=system_prompt,
-    tools=[
-        AgentTool(data_root_agent),      # BigQuery datasets (historical data)
-        AgentTool(search_root_agent),    # Google Search (real-time information)
-        AgentTool(maps_root_agent),      # Google Maps (location services)
-        AgentTool(insights_root_agent),  # Summaries and analysis
+    sub_agents=[
+        data_root_agent,
+        search_root_agent,
+        maps_root_agent,
+        insights_root_agent,
     ],
 )

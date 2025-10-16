@@ -202,7 +202,11 @@ root_agent = Agent(
         - Mention if places are currently open when available
         
         Always provide actionable, specific information to help users access healthcare.
+
+        Tasks:
+        - You will get control from health_agent.
+        - Perform the task based on user's query.
+        - ** Strictly transfer control back to health_agent after getting the data **
     """,
     tools=[search_tool, directions_tool, distance_tool],
 )
-
